@@ -1,8 +1,12 @@
 // start slingin' some d3 here.
+var randomizer = 500;
+var width = randomizer;
+var height = randomizer;
+
 d3.select("body")
   .append("svg")
-  .attr('width', 1200)
-  .attr('height', 1200)
+  .attr('width', randomizer)
+  .attr('height', randomizer)
 
 
 
@@ -13,8 +17,8 @@ d3.select("body")
     for (var i = 0; i < n; i++) {
       enemies[i] = {};
       enemies[i].iD = i;
-      enemies[i].cx = Math.random() * 500;
-      enemies[i].cy = Math.random() * 500;
+      enemies[i].cx = Math.random() * randomizer;
+      enemies[i].cy = Math.random() * randomizer;
       enemies[i].r = 5;
     }
     return enemies;
@@ -49,11 +53,29 @@ d3.select("svg").selectAll("circle")
     .data(enemies)
     .transition().duration(2000)
     .attr({
-      cx: function(circle) {return Math.random() * 1000},
-      cy: function(circle) {return Math.random() * 1000},
+      cx: function(circle) {return Math.random() * randomizer},
+      cy: function(circle) {return Math.random() * randomizer},
     })
 
  }
+
+var player = [{
+  cx: width/2, 
+  cy: height/2, 
+  r: 10   
+}]
+console.log(player);
+
+d3.select("svg")
+  .data(player)
+  .append("svg:circle")
+  .attr("class", "player")
+  .attr("cx", player[0].cx)
+  .attr("cy", player[0].cy)
+  .attr("r", player[0].r)
+  .style("fill", "red")
+
+move();
 setInterval(move, 2000);
   
   //loop through all our circles
