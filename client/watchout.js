@@ -28,6 +28,7 @@ d3.select("svg").selectAll("circle")
   })
   .enter()
   .append("svg:circle")
+  .attr("class", "enemy")
   .attr("cx", function(circle) {
     return circle.cx
   })
@@ -38,4 +39,58 @@ d3.select("svg").selectAll("circle")
     return circle.r
   })
   .style("fill", "purple")
+
+
+//setTimeout with move
+
+
+ var move = function() {
+    d3.selectAll("circle")
+    .data(enemies)
+    .transition().duration(2000)
+    .attr({
+      cx: function(circle) {return Math.random() * 1000},
+      cy: function(circle) {return Math.random() * 1000},
+    })
+
+ }
+setInterval(move, 2000);
+  
+  //loop through all our circles
+  //change x and y
+  //transition with a certain time
+
+  //loop through each enemy
+    //transition and translation from x1 and y1 to x2 and y2
+    //within set time
+
+  //MOVING FUNCTIONALITY FOR ALL ENEMIES
+  /*
+  attr('cy', function(c) {
+    var newY = Math.random() * 1000
+    c.y = newY
+  })
+  attr(cx', function(c) {
+    var newX = Math.random() * 1000
+    c.x = newX
+  })
+  transition().duration(1000);
+
+  setInterval()
+
+  INPUTS
+    circle ids
+      access x and y
+
+  OUTPUT
+    circle ids
+      x and y will change to new random location (maybe use Math.random directly)
+      Circle moves from point a to point b within 2 seconds
+
+  .transition (1 milliseconds)
+  .translation (look this up)
+
+  setInterval for every 1 second
+
+*/
 
