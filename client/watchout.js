@@ -24,7 +24,7 @@ d3.select("body")
     return enemies;
 }
 
-var enemies = createEnemies(30);
+var enemies = createEnemies(10);
 
 d3.select("svg").selectAll("circle")
   .data(enemies, function(e) {
@@ -57,51 +57,82 @@ var move = function() {
     d3.selectAll("circle")
     .data(enemies)
     .transition().duration(1000)
+    //This is once per tween
+    .tween("attr", function() {
+        //This is n times per tween
+        return function() {
+          return checkCollision(d3.select(this));
+        }
+      })
     .attr({
       cx: function(circle) {return Math.random() * randomizer},
       cy: function(circle) {return Math.random()* randomizer}
     })
+    
 
  }
 
 var checkCollision = function(enemy) {
-  var radiiSum =  10;
-  var xDiff = parseFloat(enemy.attr('cx')) - person.cx;
-  var yDiff = parseFloat(enemy.attr('cy')) - player.cy;
+  console.log('tweening');
+  var radiiSum =  15;
+  //console.log("enemy cx", enemy.cx, 'enemy cy:', enemy.cy);
+  var xDiff = enemy.attr('cx') - person.attr('cx')
+  var yDiff = enemy.attr('cy') - person.attr('cy')
 
-  var difference = Math.sqrt( Math.pow(xDiff,2) + Math.pow(yDiff,2) )
+  var difference = Math.sqrt( Math.pow(xDiff,2) + Math.pow(yDiff,2) );
+  
       if (difference < radiiSum) {
-        //function that updates best score and resets currenScore n to 0
+        updateBestScore();
+        d3.select(".current").selectAll("span")
+          .text(function(number) {
+            return 0;
+          })
+        console.log('yes!!!!')
+      } else {
+        count();
       }
+
+
+};
+
+var updateBestScore() {
+  d3.select(".highscore").selectAll("span")
+      .text(function(number) {
+        if (currentScore > number) {
+          return currentScore;
+        } else {
+          return currentScore
+        }
+      })
 }
 //assume we have reference to endPosition in endData
-var collisionKing = function( endData) {
-  //create var for enemy , perhaps (this) ?
-  var startPosition = {
-    x: parseFloat(enemy.attr('cx'));
-    y: parseFloat(enemy.attr('cy')); 
-  };
-  var endPosition = {
-    x: axes.x(endData.x);
-    y: axes.y(endData.y)
-  }
+// var collisionKing = function( endData) {
+//   //create var for enemy , perhaps (this) ?
+//   var startPosition = {
+//     x: parseFloat(enemy.attr('cx'))
+//     y: parseFloat(enemy.attr('cy')); 
+//   };
+//   var endPosition = {
+//     x: axes.x(endData.x);
+//     y: axes.y(endData.y)
+//   }
+// };
+//   (t) will be ticks  between transitions, our transition is 1000 ms, hence our t is timestep. t is time passed over total transition time
+//   invoke check collision here? 
 
-  //(t) will be ticks  between transitions, our transition is 1000 ms, hence our t is timestep. t is time passed over total transition time
-  //invoke check collision here? 
+//   var enemyNextPos = {
+//     x: startPosition.x + (endPosition.x - startPosition.x)*t;
+//     y: startPosition.y + (endPosition.y - startPosition.y)*t;
+//   }
 
-  var enemyNextPos = {
-    x: startPosition.x + (endPosition.x - startPosition.x)*t;
-    y: startPosition.y + (endPosition.y - startPosition.y)*t;
-  }
+//   enemy.attr({
+//     'cx': enemyNextPos.x,
+//     'cy': enemyNextPos.y
+//   })
 
-  enemy.attr({
-    'cx': enemyNextPos.x,
-    'cy': enemyNextPos.y
-  })
-
-  //do the transition
-  //call .tween("custom",collisionKing) 
-}
+//   //do the transition
+//   //call .tween("custom",collisionKing) 
+// }
   
 
 
@@ -148,8 +179,8 @@ var count = function() {
       .text(function(number) {currentScore++; return currentScore})
     console.log()
 }
-count();
-setInterval(count, 1000)
+// count();
+// setInterval(count, 1000)
 /*
 
 var count = function() {
