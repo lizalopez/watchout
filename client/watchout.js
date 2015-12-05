@@ -46,18 +46,64 @@ d3.select("svg").selectAll("circle")
 
 
 //setTimeout with move
+ var setRandom = function() {
+    var number = Math.random();
+    return number;
+}
+//create function definition for move
+//add 
+var move = function() {
 
-
- var move = function() {
     d3.selectAll("circle")
     .data(enemies)
-    .transition().duration(2000)
+    .transition().duration(1000)
     .attr({
-      cx: function(circle) {return Math.random() * randomizer },
-      cy: function(circle) {return Math.random() * randomizer}
+      cx: function(circle) {return Math.random() * randomizer},
+      cy: function(circle) {return Math.random()* randomizer}
     })
 
  }
+
+var checkCollision = function(enemy) {
+  var radiiSum =  10;
+  var xDiff = parseFloat(enemy.attr('cx')) - person.cx;
+  var yDiff = parseFloat(enemy.attr('cy')) - player.cy;
+
+  var difference = Math.sqrt( Math.pow(xDiff,2) + Math.pow(yDiff,2) )
+      if (difference < radiiSum) {
+        //function that updates best score and resets currenScore n to 0
+      }
+}
+//assume we have reference to endPosition in endData
+var collisionKing = function( endData) {
+  //create var for enemy , perhaps (this) ?
+  var startPosition = {
+    x: parseFloat(enemy.attr('cx'));
+    y: parseFloat(enemy.attr('cy')); 
+  };
+  var endPosition = {
+    x: axes.x(endData.x);
+    y: axes.y(endData.y)
+  }
+
+  //(t) will be ticks  between transitions, our transition is 1000 ms, hence our t is timestep. t is time passed over total transition time
+  //invoke check collision here? 
+
+  var enemyNextPos = {
+    x: startPosition.x + (endPosition.x - startPosition.x)*t;
+    y: startPosition.y + (endPosition.y - startPosition.y)*t;
+  }
+
+  enemy.attr({
+    'cx': enemyNextPos.x,
+    'cy': enemyNextPos.y
+  })
+
+  //do the transition
+  //call .tween("custom",collisionKing) 
+}
+  
+
 
 var player = [{
   cx: width/2, 
@@ -79,12 +125,7 @@ var drag = d3.behavior.drag()
   })
 
 
- //moveRelative
-  //return transform() {
-    //current x + newx
-    //current y + newy
-    //angle: 360 * (Math.atan2(newy, newx) / Math.PI * 2)
-    //}
+
 
 var person = d3.select("svg")
   .data(player)
@@ -99,7 +140,7 @@ var person = d3.select("svg")
 
 var currentScore = 0;
 move();
-setInterval(move, 2000);
+setInterval(move, 1000);
 console.log(d3.select(".currentScore"))
 console.log(d3.select(".current").selectAll("span"))
 var count = function() {
