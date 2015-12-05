@@ -24,7 +24,7 @@ d3.select("body")
     return enemies;
 }
 
-var enemies = createEnemies(30);
+var enemies = createEnemies(10);
 
 d3.select("svg").selectAll("circle")
   .data(enemies, function(e) {
@@ -82,27 +82,34 @@ var checkCollision = function(enemy) {
   var difference = Math.sqrt( Math.pow(xDiff,2) + Math.pow(yDiff,2) );
   
       if (difference < radiiSum) {
-        //updateBestScore();
+        console.log(scoreData);
+        updateBestScore();
       } 
 };
 
-// var updateBestScore = function() {
-//   d3.select(".highscore").selectAll("span")
-//       .text(function(number) {
-        
-//         if (currentScore > number) {
-//           return currentScore
-//         } else {
-//           currentScore = 0
-//           return currentScore
-//         }
-//       })
-// }
+var updateBestScore = function() {
+  scoreData.currentHigh = Math.max(scoreData.currentScore, scoreData.currentHigh)
+  d3.select(".highscore").selectAll("span")
+    .data([scoreData])
+    .text(function(d) {
+      return d.currentHigh 
+    })
+    //     var max = Math.max(scoreData.currentScore, scoreData.currentHigh)
+    //     console.log('max now:', max);
+    //     return max;
+    //   })
+  scoreData.currentScore = 0;
+    // d3.select(".collisions").selectAll("span")
+    //   .data([scoreData])
+    //   .text(function(d) {
+    //     return d.collisions++;
+    //   })
+};
 
 var scoreData = {
   currentScore : 0,
   currentHigh: 0,
-  collision: false
+  collisions: 0
 }
 
 var count = function() {
