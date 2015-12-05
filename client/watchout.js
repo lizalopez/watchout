@@ -53,8 +53,8 @@ d3.select("svg").selectAll("circle")
     .data(enemies)
     .transition().duration(2000)
     .attr({
-      cx: function(circle) {return Math.random() * randomizer},
-      cy: function(circle) {return Math.random() * randomizer},
+      cx: function(circle) {return Math.random() * randomizer },
+      cy: function(circle) {return Math.random() * randomizer}
     })
 
  }
@@ -64,9 +64,29 @@ var player = [{
   cy: height/2, 
   r: 10   
 }]
-console.log(player);
 
-d3.select("svg")
+// var drag = d3.behavior.drag().on('dragstart', function (d) {
+//   console.log("Started moving item with data:", d);
+// });
+
+
+var drag = d3.behavior.drag()
+  .on('drag', function() {
+    person.attr({
+      "cx": d3.event.x,
+      "cy": d3.event.y
+    })
+  })
+
+
+ //moveRelative
+  //return transform() {
+    //current x + newx
+    //current y + newy
+    //angle: 360 * (Math.atan2(newy, newx) / Math.PI * 2)
+    //}
+
+var person = d3.select("svg")
   .data(player)
   .append("svg:circle")
   .attr("class", "player")
@@ -74,6 +94,9 @@ d3.select("svg")
   .attr("cy", player[0].cy)
   .attr("r", player[0].r)
   .style("fill", "red")
+  .call(drag)
+  
+
 
 move();
 setInterval(move, 2000);
