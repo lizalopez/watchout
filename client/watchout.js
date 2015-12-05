@@ -68,8 +68,13 @@ var move = function() {
       cx: function(circle) {return Math.random() * randomizer},
       cy: function(circle) {return Math.random()* randomizer}
     })
-    
-
+//set boolean for detecting colision (and update collision score)    
+// d3.select(".collisions").selectAll("span")
+//       .data([scoreData])
+//       .text(function(d) {
+//         return d.collisions++;
+//       })
+//       } 
  }
 
 var checkCollision = function(enemy) {
@@ -84,7 +89,7 @@ var checkCollision = function(enemy) {
       if (difference < radiiSum) {
         console.log(scoreData);
         updateBestScore();
-      } 
+
 };
 
 var updateBestScore = function() {
@@ -99,11 +104,7 @@ var updateBestScore = function() {
     //     return max;
     //   })
   scoreData.currentScore = 0;
-    // d3.select(".collisions").selectAll("span")
-    //   .data([scoreData])
-    //   .text(function(d) {
-    //     return d.collisions++;
-    //   })
+ 
 };
 
 var scoreData = {
