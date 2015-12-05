@@ -24,7 +24,7 @@ d3.select("body")
     return enemies;
 }
 
-var enemies = createEnemies(10);
+var enemies = createEnemies(30);
 
 d3.select("svg").selectAll("circle")
   .data(enemies, function(e) {
@@ -52,8 +52,8 @@ d3.select("svg").selectAll("circle")
 }
 //create function definition for move
 //add 
-var move = function() {
 
+var move = function() {
     d3.selectAll("circle")
     .data(enemies)
     .transition().duration(1000)
@@ -73,7 +73,7 @@ var move = function() {
  }
 
 var checkCollision = function(enemy) {
-  console.log('tweening');
+
   var radiiSum =  15;
   //console.log("enemy cx", enemy.cx, 'enemy cy:', enemy.cy);
   var xDiff = enemy.attr('cx') - person.attr('cx')
@@ -82,27 +82,34 @@ var checkCollision = function(enemy) {
   var difference = Math.sqrt( Math.pow(xDiff,2) + Math.pow(yDiff,2) );
   
       if (difference < radiiSum) {
-        updateBestScore();
-        d3.select(".current").selectAll("span")
-          .text(function(number) {
-            return 0;
-          })
-        console.log('yes!!!!')
-      } else {
-        count();
-      }
-
-
+        //updateBestScore();
+      } 
 };
 
-var updateBestScore() {
-  d3.select(".highscore").selectAll("span")
-      .text(function(number) {
-        if (currentScore > number) {
-          return currentScore;
-        } else {
-          return currentScore
-        }
+// var updateBestScore = function() {
+//   d3.select(".highscore").selectAll("span")
+//       .text(function(number) {
+        
+//         if (currentScore > number) {
+//           return currentScore
+//         } else {
+//           currentScore = 0
+//           return currentScore
+//         }
+//       })
+// }
+
+var scoreData = {
+  currentScore : 0,
+  currentHigh: 0,
+  collision: false
+}
+
+var count = function() {
+    d3.select(".current").selectAll("span")
+      .data([scoreData]) 
+      .text(function(d) {
+        return d.currentScore++;
       })
 }
 //assume we have reference to endPosition in endData
@@ -169,18 +176,14 @@ var person = d3.select("svg")
   .call(drag)
   
 
-var currentScore = 0;
+
 move();
 setInterval(move, 1000);
 console.log(d3.select(".currentScore"))
 console.log(d3.select(".current").selectAll("span"))
-var count = function() {
-    d3.select(".current").selectAll("span")
-      .text(function(number) {currentScore++; return currentScore})
-    console.log()
-}
-// count();
-// setInterval(count, 1000)
+
+count();
+setInterval(count, 400)
 /*
 
 var count = function() {
