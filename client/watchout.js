@@ -97,10 +97,33 @@ var person = d3.select("svg")
   .call(drag)
   
 
-
+var currentScore = 0;
 move();
 setInterval(move, 2000);
+console.log(d3.select(".currentScore"))
+console.log(d3.select(".current").selectAll("span"))
+var count = function() {
+    d3.select(".current").selectAll("span")
+      .text(function(number) {currentScore++; return currentScore})
+    console.log()
+}
+count();
+setInterval(count, 1000)
+/*
+
+var count = function() {
+  if collision () {
+    compare current score to high score
+    change high score if necessary
+    reset current score
+    return 
+  } else {
+    increase current score
+    return;
+  }
+}
   
+setTimeout(count, 500ms)
   //loop through all our circles
   //change x and y
   //transition with a certain time
