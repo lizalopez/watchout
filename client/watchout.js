@@ -17,32 +17,37 @@ d3.select("body")
     for (var i = 0; i < n; i++) {
       enemies[i] = {};
       enemies[i].iD = i;
-      enemies[i].cx = Math.random() * randomizer;
-      enemies[i].cy = Math.random() * randomizer;
+      enemies[i].x = Math.random() * randomizer;
+      enemies[i].y = Math.random() * randomizer;
       enemies[i].r = 5;
+      enemies[i].angle = 0;
     }
     return enemies;
 }
 
 var enemies = createEnemies(10);
 
-d3.select("svg").selectAll("circle")
+d3.select("svg").selectAll("image")
+
   .data(enemies, function(e) {
     return e.iD
   })
   .enter()
-  .append("svg:circle")
+  .append("svg:image")
   .attr("class", "enemy")
-  .attr("cx", function(circle) {
-    return circle.cx
+  .attr("x", function(image) {
+    return image.x
   })
-  .attr("cy", function(circle) {
-    return circle.cy
+  .attr("y", function(image) {
+    return image.y
   })
-  .attr("r", function(circle) {
-    return circle.r
-  })
-  .style("fill", "purple")
+  // .attr("r", function(image) {
+  //   return image.r
+  // })
+  .attr('height', '50')
+  .attr('width', '50')
+  .attr('xlink:href', 'http://d2rormqr1qwzpz.cloudfront.net/photos/2015/02/20/73426-thorhammer.jpg')
+  
 
 
 //setTimeout with move
@@ -54,8 +59,11 @@ d3.select("svg").selectAll("circle")
 //add 
 
 var move = function() {
-    d3.selectAll("circle")
+    d3.selectAll("image")
     .data(enemies)
+    // .attr("transform", function(d) {
+    //   return rotate(d.angle+30)
+    // })
     .transition().duration(1000)
     //This is once per tween
     .tween("attr", function() {
@@ -65,9 +73,10 @@ var move = function() {
         }
       })
     .attr({
-      cx: function(circle) {return Math.random() * randomizer},
-      cy: function(circle) {return Math.random()* randomizer}
+      x: function(image) {return Math.random() * randomizer},
+      y: function(image) {return Math.random()* randomizer}
     })
+    
 //set boolean for detecting colision (and update collision score)    
 // d3.select(".collisions").selectAll("span")
 //       .data([scoreData])
@@ -76,21 +85,29 @@ var move = function() {
 //       })
 //       } 
  }
-
+var startAngle = [0];
 var checkCollision = function(enemy) {
 
   var radiiSum =  15;
-  //console.log("enemy cx", enemy.cx, 'enemy cy:', enemy.cy);
-  var xDiff = enemy.attr('cx') - person.attr('cx')
-  var yDiff = enemy.attr('cy') - person.attr('cy')
+  //console.log("enemy x", enemy.x, 'enemy y:', enemy.y);
+  var xDiff = enemy.attr('x') - person.attr('x')
+  var yDiff = enemy.attr('y') - person.attr('y')
 
   var difference = Math.sqrt( Math.pow(xDiff,2) + Math.pow(yDiff,2) );
   
       if (difference < radiiSum) {
-        console.log(scoreData);
         updateBestScore();
+        d3.select(".player").selectAll("span")
+          .data(["I've been hit"])
+          .enter()
+          .append("span")
+          .text(function(d) {
+            return d;
+          })
 
-};
+
+      }
+}
 
 var updateBestScore = function() {
   scoreData.currentHigh = Math.max(scoreData.currentScore, scoreData.currentHigh)
@@ -117,15 +134,15 @@ var count = function() {
     d3.select(".current").selectAll("span")
       .data([scoreData]) 
       .text(function(d) {
-        return d.currentScore++;
+        return d.currentScore++
       })
 }
 //assume we have reference to endPosition in endData
 // var collisionKing = function( endData) {
 //   //create var for enemy , perhaps (this) ?
 //   var startPosition = {
-//     x: parseFloat(enemy.attr('cx'))
-//     y: parseFloat(enemy.attr('cy')); 
+//     x: parseFloat(enemy.attr('x'))
+//     y: parseFloat(enemy.attr('y')); 
 //   };
 //   var endPosition = {
 //     x: axes.x(endData.x);
@@ -141,8 +158,8 @@ var count = function() {
 //   }
 
 //   enemy.attr({
-//     'cx': enemyNextPos.x,
-//     'cy': enemyNextPos.y
+//     'x': enemyNextPos.x,
+//     'y': enemyNextPos.y
 //   })
 
 //   //do the transition
@@ -152,8 +169,8 @@ var count = function() {
 
 
 var player = [{
-  cx: width/2, 
-  cy: height/2, 
+  x: width/2, 
+  y: height/2, 
   r: 10   
 }]
 
@@ -165,8 +182,8 @@ var player = [{
 var drag = d3.behavior.drag()
   .on('drag', function() {
     person.attr({
-      "cx": d3.event.x,
-      "cy": d3.event.y
+      "x": d3.event.x,
+      "y": d3.event.y
     })
   })
 
@@ -175,12 +192,14 @@ var drag = d3.behavior.drag()
 
 var person = d3.select("svg")
   .data(player)
-  .append("svg:circle")
+  .append("svg:image")
+  
   .attr("class", "player")
-  .attr("cx", player[0].cx)
-  .attr("cy", player[0].cy)
-  .attr("r", player[0].r)
-  .style("fill", "red")
+  .attr("x", player[0].x)
+  .attr("y", player[0].y)
+  .attr("width", "75")
+  .attr("height", "75")
+  .attr("xlink:href", "http://www.geekalerts.com/u/Thor-Sixth-Scale-Action-Figure.jpg")
   .call(drag)
   
 
@@ -207,7 +226,7 @@ var count = function() {
 }
   
 setTimeout(count, 500ms)
-  //loop through all our circles
+  //loop through all our images
   //change x and y
   //transition with a certain time
 
@@ -217,11 +236,11 @@ setTimeout(count, 500ms)
 
   //MOVING FUNCTIONALITY FOR ALL ENEMIES
   /*
-  attr('cy', function(c) {
+  attr('y', function(c) {
     var newY = Math.random() * 1000
     c.y = newY
   })
-  attr(cx', function(c) {
+  attr(x', function(c) {
     var newX = Math.random() * 1000
     c.x = newX
   })
@@ -230,7 +249,7 @@ setTimeout(count, 500ms)
   setInterval()
 
   INPUTS
-    circle ids
+    img ids
       access x and y
 
   OUTPUT
