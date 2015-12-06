@@ -1,13 +1,20 @@
 // start slingin' some d3 here.
-var randomizer = 500;
+var randomizer = 600;
 var width = randomizer;
 var height = randomizer;
 
 d3.select("body")
   .append("svg")
-  .attr('width', randomizer)
-  .attr('height', randomizer)
+  .attr('width', 1000)
+  .attr('height', 600)
 
+
+// d3.select('svg')
+// .append('image')
+// .attr('height', '50')
+//   .attr('width', '50')
+//   .attr('xlink:href', "https://mattsmoviethoughts.files.wordpress.com/2011/07/asgard-thor-movie.jpg")
+//   .attr('class', 'backImage')
 
 
 
@@ -19,16 +26,13 @@ d3.select("body")
       enemies[i].iD = i;
       enemies[i].x = Math.random() * randomizer;
       enemies[i].y = Math.random() * randomizer;
-      enemies[i].r = 5;
-      enemies[i].angle = 0;
     }
     return enemies;
 }
 
-var enemies = createEnemies(10);
+var enemies = createEnemies(80);
 
 d3.select("svg").selectAll("image")
-
   .data(enemies, function(e) {
     return e.iD
   })
@@ -46,8 +50,7 @@ d3.select("svg").selectAll("image")
   // })
   .attr('height', '50')
   .attr('width', '50')
-  .attr('xlink:href', 'http://d2rormqr1qwzpz.cloudfront.net/photos/2015/02/20/73426-thorhammer.jpg')
-  
+  .attr('xlink:href', 'http://www.geoswag.com/media/catalog/product/cache/3/image/9df78eab33525d08d6e5fb8d27136e95/t/h/thor_hammer_front.png')
 
 
 //setTimeout with move
@@ -76,7 +79,6 @@ var move = function() {
       x: function(image) {return Math.random() * randomizer},
       y: function(image) {return Math.random()* randomizer}
     })
-    
 //set boolean for detecting colision (and update collision score)    
 // d3.select(".collisions").selectAll("span")
 //       .data([scoreData])
@@ -84,6 +86,7 @@ var move = function() {
 //         return d.collisions++;
 //       })
 //       } 
+console.log('curren coll:', scoreData.collisions);
  }
 var startAngle = [0];
 var checkCollision = function(enemy) {
@@ -95,18 +98,13 @@ var checkCollision = function(enemy) {
 
   var difference = Math.sqrt( Math.pow(xDiff,2) + Math.pow(yDiff,2) );
   
-      if (difference < radiiSum) {
+      if (difference < radiiSum && !scoreData.hasCollided) {
         updateBestScore();
-        d3.select(".player").selectAll("span")
-          .data(["I've been hit"])
-          .enter()
-          .append("span")
-          .text(function(d) {
-            return d;
-          })
 
-
+        scoreData.collisions++
+        
       }
+
 }
 
 var updateBestScore = function() {
@@ -116,18 +114,24 @@ var updateBestScore = function() {
     .text(function(d) {
       return d.currentHigh 
     })
-    //     var max = Math.max(scoreData.currentScore, scoreData.currentHigh)
-    //     console.log('max now:', max);
-    //     return max;
-    //   })
+
+  scoreData.collisions++;
   scoreData.currentScore = 0;
+  
+
+  d3.select('.collisions').selectAll('span')
+        .data([scoreData])
+        .text(function(d) {
+          return d.collisions
+        })
  
 };
 
 var scoreData = {
   currentScore : 0,
   currentHigh: 0,
-  collisions: 0
+  collisions: 0,
+  hasCollided: false
 }
 
 var count = function() {
@@ -137,6 +141,8 @@ var count = function() {
         return d.currentScore++
       })
 }
+
+
 //assume we have reference to endPosition in endData
 // var collisionKing = function( endData) {
 //   //create var for enemy , perhaps (this) ?
@@ -199,7 +205,7 @@ var person = d3.select("svg")
   .attr("y", player[0].y)
   .attr("width", "75")
   .attr("height", "75")
-  .attr("xlink:href", "http://www.geekalerts.com/u/Thor-Sixth-Scale-Action-Figure.jpg")
+  .attr("xlink:href", "http://cache.lego.com/r/catalogs/-/media/catalogs/characters/marvel/2015/secondary/76030_thor_full_body_pose_360w_2x.png?l.r2=1569394236")
   .call(drag)
   
 
